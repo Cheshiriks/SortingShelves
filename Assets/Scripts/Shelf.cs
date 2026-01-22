@@ -17,6 +17,8 @@ public class Shelf : MonoBehaviour
         return slots[1].Item.Type == t0 && slots[2].Item.Type == t0;
     }
 
+    // --------
+    // проверка заполненности полок
     private void Update()
     {
         List<Boolean> bools = new List<Boolean>(); 
@@ -26,5 +28,25 @@ public class Shelf : MonoBehaviour
         }
 
         items = bools;
+    }
+    
+    public void ClearMatchedTriple()
+    {
+        // на всякий случай
+        if (!HasTripleMatch()) return;
+
+        // 1) сохраняем ссылки на предметы
+        var a = slots[0].Item;
+        var b = slots[1].Item;
+        var c = slots[2].Item;
+
+        // 2) чистим слоты (чтобы логика стала пустой сразу)
+        foreach (var s in slots)
+            s.ClearItem();
+
+        // 3) удаляем предметы из сцены
+        if (a) Destroy(a.gameObject);
+        if (b) Destroy(b.gameObject);
+        if (c) Destroy(c.gameObject);
     }
 }
