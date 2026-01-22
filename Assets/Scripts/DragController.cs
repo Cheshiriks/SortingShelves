@@ -60,19 +60,50 @@ public class DragController : MonoBehaviour
 
         Slot target = RaycastSlotUnderMouse();
 
-        if (target != null && target.IsEmpty)
+        // 1) Отпустили в пустоту
+        if (target == null)
+        {
+            dragged.MoveToSlot(startSlot);
+            FinishDrop();
+            return;
+        }
+
+        // 2) Целевой слот пустой — кладем прямо туда
+        if (target.IsEmpty)
         {
             dragged.MoveToSlot(target);
-        }
-        else
-        {
-            // если отпустили в пустоте или в занятый слот — вернуть обратно
-            dragged.MoveToSlot(startSlot);
+            FinishDrop();
+            return;
         }
 
+        // 3) Целевой слот занят — ищем первый пустой на ЭТОЙ полке
+        Shelf shelf = target.shelf;
+        Slot emptyOnShelf = FindFirstEmptySlot(shelf);
+
+        if (emptyOnShelf != null)
+            dragged.MoveToSlot(emptyOnShelf);
+        else
+            dragged.MoveToSlot(startSlot);
+
+        FinishDrop();
+    }
+    
+    
+    private Slot FindFirstEmptySlot(Shelf shelf)
+    {
+        if (shelf == null || shelf.slots == null) return null;
+
+        foreach (var s in shelf.slots)
+            if (s != null && s.IsEmpty)
+                return s;
+
+        return null;
+    }
+
+    private void FinishDrop()
+    {
         dragged = null;
         startSlot = null;
-
         GameManager.I.CheckAllShelves();
     }
 
