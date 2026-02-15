@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
                 anyMatch = true;
                 // Тут: начислить очки, звук,анимации и т.п.
             }
+            
+            var stack = shelf.GetComponent<ShelfStack>();
+            if (stack) stack.TryAdvanceIfEmpty();
         }
         
         // Если что-то удалили — проверяем победу

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class ResponsiveLayoutWorld : MonoBehaviour
@@ -7,27 +8,38 @@ public class ResponsiveLayoutWorld : MonoBehaviour
 
     [Header("Camera")]
     public Camera cam;
-    public float refWidth = 1920f;
-    public float refHeight = 1080f;
-    public float refOrthoSizeLandscape = 5f; // поставь текущее Orthographic Size в landscape
 
     [Header("Shelves to move (real shelves)")]
-    public Transform[] shelves;
+    private Transform[] shelves;
 
     [Header("Anchors")]
-    public Transform[] landscapeAnchors;
-    public Transform[] portraitAnchors;
+    private Transform[] landscapeAnchors;
+    private Transform[] portraitAnchors;
 
+    [Header("Auto-find inside THIS level root")]
+    public Transform shelfCollection;          // lvl_X/ShelfCollection
+    public Transform landscapeAnchorsRoot;     // lvl_X/LayoutAnchors/LandscapeAnchors
+    public Transform portraitAnchorsRoot;      // lvl_X/LayoutAnchors/PortraitAnchors
+    
     [Header("Smooth")]
-    public bool smooth = true;
+    public bool smoothMove = true;
     public float moveSpeed = 12f;
 
     private bool isPortrait;
     private int lastW, lastH;
 
-    private void Awake()
+    private void Reset()
+    {
+        AutoFind();
+    }
+
+    private void OnEnable()
     {
         if (!cam) cam = Camera.main;
+        AutoFind();
+
+        Collect();
+
         lastW = Screen.width;
         lastH = Screen.height;
 
@@ -36,6 +48,7 @@ public class ResponsiveLayoutWorld : MonoBehaviour
 
     private void Update()
     {
+        // если размеры не менялись — не дёргаем логику
         if (Screen.width != lastW || Screen.height != lastH)
         {
             lastW = Screen.width;
@@ -43,8 +56,46 @@ public class ResponsiveLayoutWorld : MonoBehaviour
             ApplyAll(force: false);
         }
 
-        if (smooth)
+        if (smoothMove)
             SmoothMoveShelves();
+    }
+
+    private void AutoFind()
+    {
+        if (!shelfCollection)
+            shelfCollection = transform.Find("ShelfCollection");
+
+        if (!landscapeAnchorsRoot || !portraitAnchorsRoot)
+        {
+            var layoutAnchors = transform.Find("LayoutAnchors");
+            if (layoutAnchors)
+            {
+                if (!landscapeAnchorsRoot) landscapeAnchorsRoot = layoutAnchors.Find("LandscapeAnchors");
+                if (!portraitAnchorsRoot)  portraitAnchorsRoot  = layoutAnchors.Find("PortraitAnchors");
+            }
+        }
+    }
+
+    private void Collect()
+    {
+        // Полки: берём прямых детей ShelfCollection
+        shelves = shelfCollection
+            ? shelfCollection.Cast<Transform>().ToArray()
+            : new Transform[0];
+
+        // Якоря: берём детей LandscapeAnchors/PortraitAnchors и сортируем по имени Shelf_1..Shelf_3
+        landscapeAnchors = landscapeAnchorsRoot
+            ? landscapeAnchorsRoot.Cast<Transform>().OrderBy(t => t.name).ToArray()
+            : new Transform[0];
+
+        portraitAnchors = portraitAnchorsRoot
+            ? portraitAnchorsRoot.Cast<Transform>().OrderBy(t => t.name).ToArray()
+            : new Transform[0];
+
+        // Небольшая защита, чтобы сразу было понятно, если что-то не найдено
+        if (shelves.Length == 0) Debug.LogWarning($"[{name}] No shelves found. Check ShelfCollection.", this);
+        if (landscapeAnchors.Length == 0) Debug.LogWarning($"[{name}] No landscape anchors found.", this);
+        if (portraitAnchors.Length == 0) Debug.LogWarning($"[{name}] No portrait anchors found.", this);
     }
 
     private void ApplyAll(bool force)
@@ -55,39 +106,20 @@ public class ResponsiveLayoutWorld : MonoBehaviour
         if (!force && portraitNow == isPortrait) return;
         isPortrait = portraitNow;
 
-        ApplyCamera(aspect);
-        ApplyShelvesImmediate(); // если smooth==true, это задаст “цели”
-    }
-
-    private void ApplyCamera(float aspect)
-    {
-        if (!cam || !cam.orthographic) return;
-
-        float refAspect = refWidth / refHeight;
-
-        if (!isPortrait)
-        {
-            // LANDSCAPE / SQUARE: fit by height
-            cam.orthographicSize = refOrthoSizeLandscape;
-        }
-        else
-        {
-            // PORTRAIT: fit by width (сохраняем видимую ширину как в reference)
-            cam.orthographicSize = (refOrthoSizeLandscape * refAspect) / aspect;
-        }
+        // если не smooth — ставим сразу
+        if (!smoothMove)
+            ApplyShelvesImmediate();
     }
 
     private void ApplyShelvesImmediate()
     {
         var anchors = isPortrait ? portraitAnchors : landscapeAnchors;
 
-        for (int i = 0; i < shelves.Length; i++)
+        int n = Mathf.Min(shelves.Length, anchors.Length);
+        for (int i = 0; i < n; i++)
         {
-            if (!shelves[i] || i >= anchors.Length || !anchors[i]) continue;
-
-            if (!smooth)
+            if (shelves[i] && anchors[i])
                 shelves[i].position = anchors[i].position;
-            // если smooth=true, то фактическое движение сделает SmoothMoveShelves()
         }
     }
 
@@ -95,9 +127,10 @@ public class ResponsiveLayoutWorld : MonoBehaviour
     {
         var anchors = isPortrait ? portraitAnchors : landscapeAnchors;
 
-        for (int i = 0; i < shelves.Length; i++)
+        int n = Mathf.Min(shelves.Length, anchors.Length);
+        for (int i = 0; i < n; i++)
         {
-            if (!shelves[i] || i >= anchors.Length || !anchors[i]) continue;
+            if (!shelves[i] || !anchors[i]) continue;
 
             shelves[i].position = Vector3.Lerp(
                 shelves[i].position,

@@ -16,7 +16,7 @@ public class Slot : MonoBehaviour
         if (existing != null)
         {
             SetItem(existing);
-            existing.transform.position = SnapPosition;
+            existing.transform.position = new Vector3(SnapPosition.x, SnapPosition.y-0.1f);
             existing.transform.SetParent(transform); // чтобы точно был ребёнком слота
         }
     }
