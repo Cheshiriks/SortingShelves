@@ -81,7 +81,7 @@ public class DraggableItem : MonoBehaviour
         }
 
         slot.SetItem(this);
-        transform.position = slot.SnapPosition;
+        transform.position = new Vector3(slot.SnapPosition.x, slot.SnapPosition.y-0.1f);
         transform.SetParent(slot.transform);
     }
 
