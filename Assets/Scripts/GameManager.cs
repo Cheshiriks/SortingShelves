@@ -4,6 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager I { get; private set; }
     public Shelf[] shelves;
+    public DragController dragController;
+    private bool _isResolving;
 
     private void Awake()
     {
@@ -12,27 +14,41 @@ public class GameManager : MonoBehaviour
 
     public void CheckAllShelves()
     {
-        bool anyMatch = false;
-        
-        foreach (var shelf in shelves)
+        if (_isResolving) return;
+
+        // найти первую полку с тройкой
+        Shelf matched = null;
+        foreach (var s in shelves)
         {
-            if (shelf.HasTripleMatch())
+            if (s.HasTripleMatch())
             {
-                Debug.Log($"MATCH on shelf: {shelf.name}");
-                shelf.ClearMatchedTriple();
-                anyMatch = true;
-                // Тут: начислить очки, звук,анимации и т.п.
+                matched = s;
+                break;
             }
-            
-            var stack = shelf.GetComponent<ShelfStack>();
+            var stack = s.GetComponentInParent<ShelfStack>();
             if (stack) stack.TryAdvanceIfEmpty();
         }
-        
-        // Если что-то удалили — проверяем победу
-        if (anyMatch && AreAllShelvesEmpty())
+
+        if (matched == null) return;
+
+        _isResolving = true;
+        if (dragController) dragController.enabled = false;
+
+        matched.ClearMatchedTripleAnimated(() =>
         {
-            Debug.Log("Уровень пройден!");
-        }
+            // подтянуть следующий слой на этой полке (если используешь ShelfStack)
+            var stack = matched.GetComponentInParent<ShelfStack>();
+            if (stack) stack.TryAdvanceIfEmpty();
+
+            if (dragController) dragController.enabled = true;
+            _isResolving = false;
+
+            // если хочешь разрешить "комбо" (следующий слой сразу дал тройку)
+            CheckAllShelves();
+
+            // победа (если нужно)
+            if (AreAllShelvesEmpty()) Debug.Log("Уровень пройден!");
+        });
     }
     
     public bool AreAllShelvesEmpty()

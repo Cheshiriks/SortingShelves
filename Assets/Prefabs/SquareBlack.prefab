@@ -443,7 +443,8 @@ GameObject:
   - component: {fileID: 4068392253687163949}
   - component: {fileID: 2935495986346753028}
   - component: {fileID: 7458791404716581786}
-  m_Layer: 0
+  - component: {fileID: 8630346977158426127}
+  m_Layer: 8
   m_Name: SquareBlack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -536,4 +537,23 @@ MonoBehaviour:
   - {fileID: 8915188151601964006}
   - {fileID: 8264757872835809862}
   - {fileID: 4736215298010894677}
-  items: 
+  confettiPrefab: {fileID: 1567900145016415459, guid: e3d8d91001a954516bb6f03ddacf315d, type: 3}
+--- !u!114 &8630346977158426127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8920387504177978934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6842c75daca4e6facaad0799f2ee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots:
+  - {fileID: 8915188151601964006}
+  - {fileID: 8264757872835809862}
+  - {fileID: 4736215298010894677}
+  layers: []
+  ghostRGB: 0.25
+  ghostSortingOffset: -1
