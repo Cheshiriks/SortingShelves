@@ -22,6 +22,9 @@ public class CameraFitToLevel : MonoBehaviour
     [Header("Smooth")]
     public bool smooth = true;
     public float smoothSpeed = 8f;
+    
+    [Header("Bounds filter")]
+    public LayerMask boundsLayers;
 
     private int lastW, lastH;
 
@@ -91,16 +94,28 @@ public class CameraFitToLevel : MonoBehaviour
 
     private Bounds CalculateBounds(Transform root)
     {
-        // Обычно достаточно bounds по SpriteRenderer’ам полок.
-        // Если хочешь учитывать и предметы — оставь как есть (они тоже SpriteRenderer).
         var renderers = root.GetComponentsInChildren<SpriteRenderer>(includeInactive:false);
-        if (renderers.Length == 0)
-            return new Bounds(root.position, Vector3.zero);
 
-        Bounds b = renderers[0].bounds;
-        for (int i = 1; i < renderers.Length; i++)
-            b.Encapsulate(renderers[i].bounds);
+        bool found = false;
+        Bounds b = new Bounds(root.position, Vector3.zero);
 
-        return b;
+        foreach (var r in renderers)
+        {
+            // проверяем, входит ли слой объекта в mask
+            if ((boundsLayers.value & (1 << r.gameObject.layer)) == 0)
+                continue;
+
+            if (!found)
+            {
+                b = r.bounds;
+                found = true;
+            }
+            else
+            {
+                b.Encapsulate(r.bounds);
+            }
+        }
+
+        return found ? b : new Bounds(root.position, Vector3.zero);
     }
 }

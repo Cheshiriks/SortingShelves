@@ -63,7 +63,10 @@ public class DragController : MonoBehaviour
         // 1) Отпустили в пустоту
         if (target == null)
         {
-            dragged.MoveToSlot(startSlot);
+            dragged.MoveToSlot(startSlot, () =>
+            {
+                GameManager.I.CheckAllShelves();
+            });
             FinishDrop();
             return;
         }
@@ -71,7 +74,11 @@ public class DragController : MonoBehaviour
         // 2) Целевой слот пустой — кладем прямо туда
         if (target.IsEmpty)
         {
-            dragged.MoveToSlot(target);
+            dragged.MoveToSlot(target, () =>
+            {
+                GameManager.I.CheckAllShelves();
+            });
+            
             FinishDrop();
             return;
         }
@@ -81,9 +88,15 @@ public class DragController : MonoBehaviour
         Slot emptyOnShelf = FindFirstEmptySlot(shelf);
 
         if (emptyOnShelf != null)
-            dragged.MoveToSlot(emptyOnShelf);
+            dragged.MoveToSlot(emptyOnShelf, () =>
+            {
+                GameManager.I.CheckAllShelves();
+            });
         else
-            dragged.MoveToSlot(startSlot);
+            dragged.MoveToSlot(startSlot, () =>
+            {
+                GameManager.I.CheckAllShelves();
+            });
 
         FinishDrop();
     }
@@ -102,9 +115,10 @@ public class DragController : MonoBehaviour
 
     private void FinishDrop()
     {
+        RestoreVisualSetup();
         dragged = null;
         startSlot = null;
-        GameManager.I.CheckAllShelves();
+        //GameManager.I.CheckAllShelves();
     }
 
     private Slot RaycastSlotUnderMouse()
@@ -132,7 +146,7 @@ public class DragController : MonoBehaviour
         }
     }
 
-    private void restoreVisualSetup()
+    private void RestoreVisualSetup()
     {
         if (draggedSR)
             draggedSR.sortingOrder = originalSortingOrder;

@@ -144,4 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 8
-  CurrentSlot: {fileID: 0}
+  snapTime: 0.1
+  bounceTime: 0.2
+  bounceScale: 1.4
+  bouncePosFactor: 0.08
