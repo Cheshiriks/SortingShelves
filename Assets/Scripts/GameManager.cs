@@ -6,10 +6,22 @@ public class GameManager : MonoBehaviour
     public Shelf[] shelves;
     public DragController dragController;
     private bool _isResolving;
+    
+    [Header("Present")]
+    public PresentMenuTimer presentMenu;
+    
+    [Header("Win")]
+    public GameObject winMenu;
 
     private void Awake()
     {
         I = this;
+        if (!presentMenu) presentMenu = FindFirstObjectByType<PresentMenuTimer>();
+    }
+    
+    public void TryShowPresentMenu()
+    {
+        if (presentMenu) presentMenu.TryShow();
     }
 
     public void CheckAllShelves()
@@ -44,10 +56,18 @@ public class GameManager : MonoBehaviour
             _isResolving = false;
 
             // если хочешь разрешить "комбо" (следующий слой сразу дал тройку)
-            CheckAllShelves();
+            // CheckAllShelves();
 
             // победа (если нужно)
-            if (AreAllShelvesEmpty()) Debug.Log("Уровень пройден!");
+            if (AreAllShelvesEmpty())
+            {
+                winMenu.SetActive(true);
+                Debug.Log("Уровень пройден!");
+            }
+            else
+            {
+                TryShowPresentMenu();
+            }
         });
     }
     

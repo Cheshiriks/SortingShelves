@@ -20,6 +20,11 @@ public class StarsPopIn : MonoBehaviour
     {
         Play();
     }
+    
+    private void OnDisable()
+    {
+        menuButton.localScale = _menuScale;
+    }
 
     public void Play(int starsToShow = -1)
     {

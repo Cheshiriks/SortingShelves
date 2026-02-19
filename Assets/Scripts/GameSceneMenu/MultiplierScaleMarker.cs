@@ -1,10 +1,21 @@
+using TMPro;
 using UnityEngine;
 
 public class MultiplierScaleMarker : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private RectTransform scaleRect;   // Scale (Image)
-    [SerializeField] private RectTransform markerRect;  // Marker (Image, child of Scale)
+    [SerializeField] private RectTransform markerRect;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    
+    [Header("UI Coin animation")]
+    [SerializeField] private CoinFlyAnimator coinFly;
+    [SerializeField] private RectTransform spawnFrom;
+    [SerializeField] private CoinsMenuTextCounter coinsCounter;
+    
+    [Header("UI Button")]
+    [SerializeField] private GameObject buttonMenu;
+    [SerializeField] private GameObject buttonAd;
 
     [Header("Motion")]
     [SerializeField] private float speed = 250f; // пикселей в секунду (UI units)
@@ -104,8 +115,25 @@ public class MultiplierScaleMarker : MonoBehaviour
 
         float percent = GetCurrentPercent(); // 0..100
         int segment = GetSegmentIndex(percent); // 1..5 (по 20%)
+        int counter = GetCounter(segment);
 
-        Debug.Log($"Marker stopped at: {percent:0.0}% (segment {segment})");
+        int addCoins = 50*counter;
+        //coinsText.text = addCoins.ToString();
+        
+        // запускаем полёт монет, и когда долетели — докручиваем текст
+        if (coinFly && spawnFrom)
+        {
+            coinFly.PlayFrom(spawnFrom, () =>
+            {
+                // Важно: показ всегда "до истины"
+                coinsCounter.AnimateTo(addCoins);
+            });
+        }
+        
+        buttonAd.SetActive(false);
+        buttonMenu.SetActive(true);
+        
+        Debug.Log($"Marker stopped at: {percent:0.0}% (segment {segment}) (counter x{counter})");
     }
 
     public float GetCurrentPercent()
@@ -121,5 +149,18 @@ public class MultiplierScaleMarker : MonoBehaviour
         // На 100% должно быть 5
         int idx = Mathf.FloorToInt(percent / 20f) + 1;
         return Mathf.Clamp(idx, 1, 5);
+    }
+    
+    private int GetCounter(int segment)
+    {
+        int result = segment switch {
+            1 => 2,
+            2 => 3,
+            3 => 5,
+            4 => 3,
+            5 => 2,
+            _ => 1
+        };
+        return result;
     }
 }
