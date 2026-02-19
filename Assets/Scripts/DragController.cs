@@ -142,7 +142,7 @@ public class DragController : MonoBehaviour
         if (draggedSR)
         {
             originalSortingOrder = draggedSR.sortingOrder;
-            draggedSR.sortingOrder = 999;
+            draggedSR.sortingOrder = 99;
         }
     }
 
