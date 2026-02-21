@@ -30,11 +30,12 @@ public class CoinsTextCounter : MonoBehaviour
         if (coinsText) coinsText.text = _shownValue.ToString();
     }
 
-    public void AnimateTo(int targetValue)
+    public void AnimateTo(int coinsBefore, int targetValue)
     {
         if (!coinsText) return;
 
         if (_routine != null) StopCoroutine(_routine);
+        _shownValue = coinsBefore;
         _routine = StartCoroutine(AnimateRoutine(targetValue));
     }
 

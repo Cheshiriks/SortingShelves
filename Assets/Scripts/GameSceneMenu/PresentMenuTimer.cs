@@ -44,7 +44,8 @@ public class PresentMenuTimer : MonoBehaviour
         _nextAllowedTime = Time.time + cooldownSeconds;
         Debug.Log("nextAllowedTime " + _nextAllowedTime + " now " + Time.time);
         
-        // TODO: выдать награду
+        // выдать награду
+        int coinsBefore = SaveGame.Instance.Coins;
         int coinsAfter = SaveGame.Instance.PlusCoin(presentCoins);
         Hide();
         
@@ -54,13 +55,13 @@ public class PresentMenuTimer : MonoBehaviour
             coinFly.PlayFrom(spawnFrom, () =>
             {
                 // Важно: показ всегда "до истины"
-                coinsCounter.AnimateTo(coinsAfter);
+                coinsCounter.AnimateTo(coinsBefore, coinsAfter);
             });
         }
         else
         {
             // если без VFX — просто докрутим
-            coinsCounter.AnimateTo(coinsAfter);
+            coinsCounter.AnimateTo(coinsBefore, coinsAfter);
         }
     }
 
