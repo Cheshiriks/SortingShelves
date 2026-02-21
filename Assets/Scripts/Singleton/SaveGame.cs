@@ -10,9 +10,23 @@ public class SaveGame : MonoBehaviour
     [SerializeField] private int coins = 0;
     [SerializeField] private int stars = 0;
     
+    [SerializeField] private int selectedThemeId = -1;
+    [SerializeField] private int buyButtonId = 0;
+    
     public static SaveGame Instance;
     
     public int Coins => coins;
+    public int SelectedThemeId
+    {
+        get { return selectedThemeId; }
+        set { selectedThemeId = value; }
+    }
+    
+    public int BuyButtonId
+    {
+        get { return buyButtonId; }
+        set { buyButtonId = value; }
+    }
 
     private void Awake()
     {
@@ -48,6 +62,10 @@ public class SaveGame : MonoBehaviour
         if (PlayerPrefs.HasKey("coins"))
         {
             coins = PlayerPrefs.GetInt("coins");
+        }
+        if (PlayerPrefs.HasKey("stars"))
+        {
+            coins = PlayerPrefs.GetInt("stars");
         }
     }
 
