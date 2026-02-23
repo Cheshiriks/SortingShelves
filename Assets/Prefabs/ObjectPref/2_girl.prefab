@@ -144,7 +144,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  snapTime: 0.1
-  bounceTime: 0.2
-  bounceScale: 1.4
-  bouncePosFactor: 0.08
+  flyTime: 0.08
+  dropDownTime: 0.1
+  bounceUpTime: 0.12
+  dropDownUnits: 0.35
+  bounceOvershootUnits: 0.08
+  pickupClip: {fileID: 8300000, guid: ccd58667c3e1341b58654dc6e11663b8, type: 3}
+  dropClip: {fileID: 8300000, guid: 2dec9aa2e32ea4bb5be640fc74dc038b, type: 3}
+  pickupLift: 0.2
+  pickupTime: 0.08

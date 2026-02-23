@@ -16,7 +16,59 @@ public class DraggableItem : MonoBehaviour
     public float bounceOvershootUnits = 0.08f; // чуть выше слота (опционально)
 
     private Coroutine moveRoutine;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioClip pickupClip;
+    [SerializeField] private AudioClip dropClip;
+    
+    [Header("Pickup")]
+    [SerializeField] private float pickupLift = 0.2f;     // насколько поднять (world units)
+    [SerializeField] private float pickupTime = 0.08f;
 
+    public Vector3 VisualOffset { get; private set; }
+    private Coroutine _pickupRoutine;
+
+    public void OnPickup()
+    {
+        // 🔊 звук поднятия
+        if (pickupClip != null)
+            AudioManager.Instance.PlaySFX(pickupClip);
+        
+        if (_pickupRoutine != null) StopCoroutine(_pickupRoutine);
+        _pickupRoutine = StartCoroutine(PickupRoutine());
+    }
+
+    private IEnumerator PickupRoutine()
+    {
+        Vector3 startOffset = VisualOffset;
+        Vector3 targetOffset = Vector3.up * pickupLift;
+
+        float t = 0f;
+
+        while (t < pickupTime)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / pickupTime);
+            float eased = 1f - Mathf.Pow(1f - k, 3f); // ease-out
+
+            VisualOffset = Vector3.Lerp(startOffset, targetOffset, eased);
+
+            yield return null;
+        }
+
+        VisualOffset = targetOffset;
+
+        _pickupRoutine = null;
+    }
+    
+    public void ResetPickupVisual()
+    {
+        if (_pickupRoutine != null)
+            StopCoroutine(_pickupRoutine);
+
+        VisualOffset = Vector3.zero;
+    }
+    
     public void MoveToSlot(Slot slot, Action onArrived = null)
     {
         if (slot == null) return;
@@ -43,6 +95,10 @@ public class DraggableItem : MonoBehaviour
         // 1) Быстро долетаем к слоту (ease-out)
         yield return Move(startPos, endPos, flyTime, EaseOutCubic);
 
+        // 🔊 звук приземления
+        if (dropClip != null)
+            AudioManager.Instance.PlaySFX(dropClip);
+        
         // 2) “Проваливаемся” ниже (ease-in — ускорение вниз)
         yield return Move(endPos, belowPos, dropDownTime, EaseInCubic);
 

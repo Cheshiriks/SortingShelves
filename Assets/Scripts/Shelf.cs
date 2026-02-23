@@ -8,6 +8,8 @@ public partial class Shelf : MonoBehaviour
     
     [Header("VFX")]
     public ParticleSystem confettiPrefab;
+    
+    public AudioClip collapseClip;
 
     public bool HasTripleMatch()
     {
@@ -42,6 +44,9 @@ public partial class Shelf : MonoBehaviour
             onComplete?.Invoke();
             yield break;
         }
+        
+        // Проигрываем звук
+        AudioManager.Instance.PlaySFX(collapseClip);
 
         // Отключаем коллайдеры на время анимации
         DisableItemInteraction(a, false);

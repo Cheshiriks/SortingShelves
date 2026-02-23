@@ -25,6 +25,9 @@ public class CoinFlyAnimator : MonoBehaviour
     
     [Header("Delay")]
     public float startDelay = 0.5f;
+    
+    [Header("Sound")]
+    [SerializeField] private AudioClip createCoins;
 
     public void PlayFrom(RectTransform from, System.Action onArrived = null)
     {
@@ -67,6 +70,9 @@ public class CoinFlyAnimator : MonoBehaviour
 
     private IEnumerator FlyOne(RectTransform rt, Vector2 end, float time, System.Action onDone)
     {
+        if (createCoins != null)
+            AudioManager.Instance.PlaySFX(createCoins);
+        
         // Пауза перед полётом
         if (startDelay > 0f)
             yield return new WaitForSeconds(startDelay);

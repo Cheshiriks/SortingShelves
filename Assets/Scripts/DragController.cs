@@ -36,6 +36,8 @@ public class DragController : MonoBehaviour
         if (!hit.collider) return;
 
         dragged = hit.collider.GetComponent<DraggableItem>();
+        dragged.OnPickup();
+        
         if (!dragged) return;
         if (dragged.CurrentSlot == null) return;
 
@@ -51,7 +53,7 @@ public class DragController : MonoBehaviour
     private void Drag()
     {
         if (!dragged) return;
-        dragged.transform.position = GetMouseWorld() + grabOffset;
+        dragged.transform.position = GetMouseWorld() + grabOffset + dragged.VisualOffset;
     }
 
     private void Drop()
