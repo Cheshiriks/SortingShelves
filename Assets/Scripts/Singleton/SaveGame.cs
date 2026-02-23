@@ -3,7 +3,7 @@ using UnityEngine;
 public class SaveGame : MonoBehaviour
 {
 
-    public static bool SoundOn = true;
+    public bool soundOn = true;
 
     [SerializeField] private int gameLevel = 1;
     [SerializeField] private int maxLevel = 1;
