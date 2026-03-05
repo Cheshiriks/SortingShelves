@@ -27,7 +27,7 @@ public class CoinsTextCounter : MonoBehaviour
     public void SetInstant(int value)
     {
         _shownValue = value;
-        if (coinsText) coinsText.text = _shownValue.ToString();
+        //if (coinsText) coinsText.text = _shownValue.ToString();
     }
 
     public void AnimateTo(int coinsBefore, int targetValue)

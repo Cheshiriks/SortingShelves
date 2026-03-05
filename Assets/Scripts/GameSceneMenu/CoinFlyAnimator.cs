@@ -70,8 +70,9 @@ public class CoinFlyAnimator : MonoBehaviour
 
     private IEnumerator FlyOne(RectTransform rt, Vector2 end, float time, System.Action onDone)
     {
-        if (createCoins != null)
-            AudioManager.Instance.PlaySFX(createCoins);
+        // Момент появления монет
+        // if (createCoins != null)
+        //    AudioManager.Instance.PlaySFX(createCoins);
         
         // Пауза перед полётом
         if (startDelay > 0f)
@@ -100,6 +101,10 @@ public class CoinFlyAnimator : MonoBehaviour
 
             yield return null;
         }
+        
+        // Момент стака монет
+        if (createCoins != null)
+            AudioManager.Instance.PlaySFX(createCoins);
 
         rt.anchoredPosition = end;
         rt.localScale = Vector3.one * endScale;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -6,12 +7,15 @@ public class GameManager : MonoBehaviour
     public Shelf[] shelves;
     public DragController dragController;
     private bool _isResolving;
+    private bool _gameOver;
     
     [Header("Present")]
     public PresentMenuTimer presentMenu;
     
-    [Header("Win")]
-    public GameObject winMenu;
+    [Header("Menu")]
+    [SerializeField] private GameObject winMenu;
+    [SerializeField] private GameObject gameOverMenu;
+    [SerializeField] private UIBlocker uiBlocker;
 
     private void Awake()
     {
@@ -61,6 +65,7 @@ public class GameManager : MonoBehaviour
             // победа (если нужно)
             if (AreAllShelvesEmpty())
             {
+                SaveGame.Instance.WinLevel();
                 winMenu.SetActive(true);
                 Debug.Log("Уровень пройден!");
             }
@@ -71,6 +76,32 @@ public class GameManager : MonoBehaviour
         });
     }
     
+    public void CheckLoseCondition()
+    {
+        if (_gameOver) return;
+        
+        foreach (var shelf in shelves)
+        {
+            foreach (var slot in shelf.slots)
+            {
+                if (slot.IsEmpty)
+                    return; // есть куда ходить -> не проиграл
+            }
+        }
+
+        _gameOver = true;
+        Debug.Log("Ты проиграл");
+        
+        uiBlocker.SetBlocked(true);
+        StartCoroutine(LoseDelayRoutine());
+    }
+
+    private IEnumerator LoseDelayRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        gameOverMenu.SetActive(true);
+    }
+
     public bool AreAllShelvesEmpty()
     {
         foreach (var shelf in shelves)

@@ -66,6 +66,9 @@ public class ShelfStack : MonoBehaviour
         int next = currentIndex + 1;
         if (next < layers.Count)
             ShowGhostLayer(layers[next]);
+        
+        // 3) проверяем проигрыш
+        GameManager.I.CheckLoseCondition();
     }
 
     private void SpawnLayer(ShelfPrefabLayer layer)
