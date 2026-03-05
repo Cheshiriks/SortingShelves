@@ -28,6 +28,8 @@ public class ButtonBuyWallpeper : MonoBehaviour
     
     public void BuyWallpaper()
     {
+        ButtonSoundManager.Instance.Play();
+        
         if (cost <= SaveGame.Instance.Coins)
         {
             int newCoins = SaveGame.Instance.MinusCoin(cost);

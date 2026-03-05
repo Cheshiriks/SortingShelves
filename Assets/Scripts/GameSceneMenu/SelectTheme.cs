@@ -16,6 +16,8 @@ public class SelectTheme : MonoBehaviour
     
     public void ChangeTheme()
     {
+        ButtonSoundManager.Instance.Play();
+        
         if (id < SaveGame.Instance.BuyButtonId)
         {
             themeSwitcher.ApplyTheme(id);

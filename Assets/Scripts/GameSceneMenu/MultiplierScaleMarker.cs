@@ -118,7 +118,10 @@ public class MultiplierScaleMarker : MonoBehaviour
         int counter = GetCounter(segment);
 
         int addCoins = 50*counter;
-        //coinsText.text = addCoins.ToString();
+        
+        // Сохраняем разность выигранных монет и 50
+        SaveGame.Instance.PlusCoin(addCoins-50);
+        SaveGame.Instance.PrivateMenuCoins = addCoins;
         
         // запускаем полёт монет, и когда долетели — докручиваем текст
         if (coinFly && spawnFrom)
