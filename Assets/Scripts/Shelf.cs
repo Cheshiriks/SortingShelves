@@ -23,6 +23,10 @@ public partial class Shelf : MonoBehaviour
     public void ClearMatchedTripleAnimated(Action onComplete = null,
         float scaleUp = 1.3f, float upTime = 0.12f, float downTime = 0.12f)
     {
+        
+        // Добавляем очки за сбор тройки
+        SaveGame.Instance.AddScore();
+        
         if (!HasTripleMatch())
         {
             onComplete?.Invoke();

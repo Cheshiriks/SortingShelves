@@ -1,4 +1,5 @@
 using UnityEngine;
+using YG;
 
 public class PresentMenuTimer : MonoBehaviour
 {
@@ -43,6 +44,9 @@ public class PresentMenuTimer : MonoBehaviour
     {
         _nextAllowedTime = Time.time + cooldownSeconds;
         Debug.Log("nextAllowedTime " + _nextAllowedTime + " now " + Time.time);
+        
+        // показываем рекламу
+        YG2.InterstitialAdvShow();
         
         // выдать награду
         int coinsBefore = SaveGame.Instance.Coins;

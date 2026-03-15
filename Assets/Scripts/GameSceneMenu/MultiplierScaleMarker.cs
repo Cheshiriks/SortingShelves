@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using YG;
 
 public class MultiplierScaleMarker : MonoBehaviour
 {
@@ -112,6 +113,14 @@ public class MultiplierScaleMarker : MonoBehaviour
     public void StopMoving()
     {
         isRunning = false;
+        
+        // реклама за вознаграждение
+        string id = "coin";
+        YG2.RewardedAdvShow(id, GetRewards);
+    }
+
+    private void GetRewards()
+    {
 
         float percent = GetCurrentPercent(); // 0..100
         int segment = GetSegmentIndex(percent); // 1..5 (по 20%)
