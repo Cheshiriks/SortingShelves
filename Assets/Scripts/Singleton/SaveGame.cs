@@ -9,6 +9,7 @@ public class SaveGame : MonoBehaviour
     [SerializeField] private int maxLevel = 1;
     [SerializeField] private int coins = 0;
     [SerializeField] private int stars = 0;
+    [SerializeField] private int score = 0;
     
     [SerializeField] private int selectedThemeId = -1;
     [SerializeField] private int buyButtonId = 0;
@@ -22,6 +23,8 @@ public class SaveGame : MonoBehaviour
     public int Coins => coins;
     public int Stars => stars;
     public int MaxLevel => maxLevel;
+    public int Score => score;
+    
     public int SelectedThemeId
     {
         get { return selectedThemeId; }
@@ -110,6 +113,13 @@ public class SaveGame : MonoBehaviour
         }
     }
 
+    public int AddScore(int scoreToAdd = 20)
+    {
+        score += scoreToAdd;
+        SaveData();
+        return score;
+    }
+    
     public int PlusCoin(int addCoins)
     {
         coins += addCoins;
