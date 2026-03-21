@@ -16,8 +16,15 @@ public enum ItemType
     FvPineapple,
     FvBanana,
     
-    // ----- Animals 16-20
+    // ----- Animals 16-25
     AnimalPanda,
     AnimalCapybara,
     AnimalRaccoon,
+    AnimalGreenDino,
+    AnimalCat,
+    AnimalGiraffe,
+    AnimalPenguin,
+    
+    // ----- Food 26-20
+    FoodEgg,
 }

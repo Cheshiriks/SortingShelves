@@ -1,0 +1,18 @@
+{
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 225,
+    "gameLevel": 32,
+    "maxLevel": 32,
+    "coins": 2650,
+    "stars": 93,
+    "score": 1480,
+    "selectedThemeId": -1,
+    "buyButtonId": 5
+}
