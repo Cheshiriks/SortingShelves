@@ -1,18 +1,19 @@
 using UnityEngine;
+using YG;
 
 public class SaveGame : MonoBehaviour
 {
 
     public bool soundOn = true;
 
-    [SerializeField] private int gameLevel = 1;
-    [SerializeField] private int maxLevel = 1;
-    [SerializeField] private int coins = 0;
-    [SerializeField] private int stars = 0;
-    [SerializeField] private int score = 0;
+    //[SerializeField] private int gameLevel = 1;
+    //[SerializeField] private int maxLevel = 1;
+    //[SerializeField] private int coins = 0;
+    //[SerializeField] private int stars = 0;
+    //[SerializeField] private int score = 0;
     
-    [SerializeField] private int selectedThemeId = -1;
-    [SerializeField] private int buyButtonId = 0;
+    //[SerializeField] private int selectedThemeId = -1;
+    //[SerializeField] private int buyButtonId = 0;
     
     // Для анимации 
     private int _plusMenuCoins = 0;
@@ -20,28 +21,29 @@ public class SaveGame : MonoBehaviour
     
     public static SaveGame Instance;
     
-    public int Coins => coins;
-    public int Stars => stars;
-    public int MaxLevel => maxLevel;
-    public int Score => score;
+    public int Coins => YG2.saves.coins;
+    public int Stars => YG2.saves.stars;
+    public int MaxLevel => YG2.saves.maxLevel;
+    public int GameLevel => YG2.saves.gameLevel;
+    public int Score => YG2.saves.score;
     
     public int SelectedThemeId
     {
-        get { return selectedThemeId; }
+        get { return YG2.saves.selectedThemeId; }
         set
         {
-            selectedThemeId = value;
-            SaveData();
+            YG2.saves.selectedThemeId = value;
+            YG2.SaveProgress();
         }
     }
     
     public int BuyButtonId
     {
-        get { return buyButtonId; }
+        get { return YG2.saves.buyButtonId; }
         set
         {
-            buyButtonId = value;
-            SaveData();
+            YG2.saves.buyButtonId = value;
+            YG2.SaveProgress();
         }
     }
     
@@ -71,7 +73,7 @@ public class SaveGame : MonoBehaviour
         }
     }
     
-    public void SaveData()
+    /*public void SaveData()
     {
         PlayerPrefs.SetInt("gameLevel", gameLevel);
         PlayerPrefs.SetInt("maxLevel", maxLevel);
@@ -111,47 +113,47 @@ public class SaveGame : MonoBehaviour
         {
             selectedThemeId = PlayerPrefs.GetInt("selectedThemeId");
         }
-    }
+    }*/
 
     public int AddScore(int scoreToAdd = 20)
     {
-        score += scoreToAdd;
-        SaveData();
-        return score;
+        YG2.saves.score += scoreToAdd;
+        YG2.SaveProgress();
+        return YG2.saves.score;
     }
     
     public int PlusCoin(int addCoins)
     {
-        coins += addCoins;
-        SaveData();
-        return coins;
+        YG2.saves.coins += addCoins;
+        YG2.SaveProgress();
+        return YG2.saves.coins;
     }
     
     public int MinusCoin(int minusCoins)
     {
-        if (coins >= minusCoins)
+        if (YG2.saves.coins >= minusCoins)
         {
-            coins -= minusCoins;
+            YG2.saves.coins -= minusCoins;
         }
-        SaveData();
-        return coins;
+        YG2.SaveProgress();
+        return YG2.saves.coins;
     }
     
     public int PlusStars(int addCoins)
     {
-        stars += addCoins;
-        SaveData();
-        return stars;
+        YG2.saves.stars += addCoins;
+        YG2.SaveProgress();
+        return YG2.saves.stars;
     }
     
     public int MinusStars(int minusCoins)
     {
-        if (stars >= minusCoins)
+        if (YG2.saves.stars >= minusCoins)
         {
-            stars -= minusCoins;
+            YG2.saves.stars -= minusCoins;
         }
-        SaveData();
-        return stars;
+        YG2.SaveProgress();
+        return YG2.saves.stars;
     }
 
     public void WinLevel()
@@ -162,16 +164,16 @@ public class SaveGame : MonoBehaviour
         PlusCoin(50);
         _plusMenuCoins = 50;
         
-        maxLevel++;
-        if (gameLevel >= 50)
+        YG2.saves.maxLevel++;
+        if (YG2.saves.gameLevel >= 50)
         {
-            gameLevel = 30;
+            YG2.saves.gameLevel = 30;
         }
         else
         {
-            gameLevel++;
+            YG2.saves.gameLevel++;
         }
-        SaveData();
+        YG2.SaveProgress();
     }
 
 }
