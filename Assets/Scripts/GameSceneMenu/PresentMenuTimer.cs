@@ -17,6 +17,10 @@ public class PresentMenuTimer : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private int presentCoins = 50;
 
+    [Header("Menu")]
+    [SerializeField] private CollectionManager collectionManager;
+    [SerializeField] private CollectionRewardMenuController collectionRewardMenuController;
+
     private float _nextAllowedTime; // Time.time, когда можно показывать снова
 
     private void Awake()
@@ -29,13 +33,55 @@ public class PresentMenuTimer : MonoBehaviour
     {
         if (Time.time < _nextAllowedTime) return;
 
-        presentMenu.SetActive(true);
+        bool canShowCollection = collectionManager.HasUnfinishedCollectionItems();
+
+        // например 50 на 50
+        bool showCollection = canShowCollection && Random.value < 0.5f;
+
+        if (showCollection)
+        {
+            ShowCollectionReward();
+        }
+        else
+        {
+            ShowCoinsReward();
+        }
+        
         uiBlocker.SetBlocked(true);
+    }
+
+    public void ShowCoinsReward()
+    {
+        presentMenu.SetActive(true);
+    }
+
+    public void ShowCollectionReward()
+    {
+        var item = collectionManager.GetRandomAvailableCollectionItem();
+
+        if (item == null)
+        {
+            ShowCoinsReward();
+            return;
+        }
+
+        int newCount = collectionManager.AddCollectionCount(item.id, 1);
+
+        // тут можно сохранить прогресс
+        // SaveCollectionData();
+
+        collectionRewardMenuController.Show(item, newCount);
     }
 
     public void Hide()
     {
         presentMenu.SetActive(false);
+        uiBlocker.SetBlocked(false);
+    }
+    
+    public void HideCollectionReward()
+    {
+        collectionRewardMenuController.Hide();
         uiBlocker.SetBlocked(false);
     }
 
