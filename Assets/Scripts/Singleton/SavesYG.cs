@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace YG
 {
     public partial class SavesYG
@@ -10,5 +12,7 @@ namespace YG
         
         public int selectedThemeId = -1;
         public int buyButtonId = 0;
+        
+        public List<CollectionProgressEntry> collectionProgress = new();
     }
 }

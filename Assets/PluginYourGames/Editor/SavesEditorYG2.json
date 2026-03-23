@@ -7,12 +7,30 @@
         false,
         false
     ],
-    "idSave": 225,
-    "gameLevel": 32,
-    "maxLevel": 32,
-    "coins": 2650,
-    "stars": 93,
-    "score": 1480,
+    "idSave": 99,
+    "gameLevel": 10,
+    "maxLevel": 10,
+    "coins": 400,
+    "stars": 27,
+    "score": 580,
     "selectedThemeId": -1,
-    "buyButtonId": 5
+    "buyButtonId": 3,
+    "collectionProgress": [
+        {
+            "id": "7_Soda",
+            "count": 4
+        },
+        {
+            "id": "2_Girl",
+            "count": 2
+        },
+        {
+            "id": "8_Gum",
+            "count": 3
+        },
+        {
+            "id": "6_Cola",
+            "count": 1
+        }
+    ]
 }
