@@ -52,6 +52,9 @@ public class GameManager : MonoBehaviour
 
         matched.ClearMatchedTripleAnimated(() =>
         {
+            // уменьшаем look всех полок на 1
+            DecreaseAllShelfLocks(1);
+            
             // подтянуть следующий слой на этой полке (если используешь ShelfStack)
             var stack = matched.GetComponentInParent<ShelfStack>();
             if (stack) stack.TryAdvanceIfEmpty();
@@ -113,5 +116,15 @@ public class GameManager : MonoBehaviour
             }
         }
         return true;
+    }
+    
+    public void DecreaseAllShelfLocks(int amount = 1)
+    {
+        foreach (var shelf in shelves)
+        {
+            var shelfLock = shelf.GetComponent<ShelfLock>();
+            if (shelfLock != null && shelfLock.IsLocked)
+                shelfLock.DecreaseLock(amount);
+        }
     }
 }

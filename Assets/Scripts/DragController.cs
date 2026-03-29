@@ -35,11 +35,18 @@ public class DragController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f, itemMask);
         if (!hit.collider) return;
 
-        dragged = hit.collider.GetComponent<DraggableItem>();
+        DraggableItem candidate = hit.collider.GetComponent<DraggableItem>();
+        if (!candidate) return;
+        if (candidate.CurrentSlot == null) return;
+
+        // проверяем, что полка не заблокирована
+        var shelfLock = candidate.CurrentSlot.shelf.GetComponent<ShelfLock>();
+        if (shelfLock != null && shelfLock.IsLocked)
+            return;
+
+        // Только теперь действительно "подбираем" предмет
+        dragged = candidate;
         dragged.OnPickup();
-        
-        if (!dragged) return;
-        if (dragged.CurrentSlot == null) return;
 
         startSlot = dragged.CurrentSlot;
         startSlot.ClearItem();
@@ -62,6 +69,16 @@ public class DragController : MonoBehaviour
 
         Slot target = RaycastSlotUnderMouse();
 
+        // проверяем, что полка не заблокирована
+        if (target != null)
+        {
+            var targetLock = target.shelf.GetComponent<ShelfLock>();
+            if (targetLock != null && targetLock.IsLocked)
+            {
+                target = null; // считаем, что положить нельзя
+            }
+        }
+        
         // 1) Отпустили в пустоту
         if (target == null)
         {
@@ -87,6 +104,19 @@ public class DragController : MonoBehaviour
 
         // 3) Целевой слот занят — ищем первый пустой на ЭТОЙ полке
         Shelf shelf = target.shelf;
+        
+        // проверяем, что полка не заблокирована
+        var shelfLock = shelf.GetComponent<ShelfLock>();
+        if (shelfLock != null && shelfLock.IsLocked)
+        {
+            dragged.MoveToSlot(startSlot, () =>
+            {
+                GameManager.I.CheckAllShelves();
+            });
+            FinishDrop();
+            return;
+        }
+        
         Slot emptyOnShelf = FindFirstEmptySlot(shelf);
 
         if (emptyOnShelf != null)

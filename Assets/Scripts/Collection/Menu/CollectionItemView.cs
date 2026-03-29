@@ -12,7 +12,7 @@ public class CollectionItemView : MonoBehaviour
         {
             shadowImage.sprite = data.sprite;
             shadowImage.type = Image.Type.Simple;
-            shadowImage.color = new Color(1f, 1f, 1f, 0.25f);
+            shadowImage.color = new Color(0f, 0f, 0f, 0.25f);
         }
 
         if (fillImage != null)

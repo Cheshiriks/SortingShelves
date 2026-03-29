@@ -2212,6 +2212,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 3d447856492174d2ab9cb70d78a4ff3a, type: 3}
   - id: 8_Gum
     sprite: {fileID: 21300000, guid: d41ec1314f28144a294ac1a46aa890f6, type: 3}
+  - id: 11_Apple
+    sprite: {fileID: 21300000, guid: 4b269983720b54bacbbe5de227c4361b, type: 3}
 --- !u!4 &1179038905
 Transform:
   m_ObjectHideFlags: 0

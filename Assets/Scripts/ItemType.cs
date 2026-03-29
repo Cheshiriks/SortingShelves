@@ -25,6 +25,15 @@ public enum ItemType
     AnimalGiraffe,
     AnimalPenguin,
     
-    // ----- Food 26-20
+    // ----- Food 26-35
     FoodEgg,
+    FoodRedChips,
+    FoodGreenChips,
+    FoodCookie,
+    FoodJuiceOrange,
+    FoodJuiceCherry,
+    FoodJuiceKivy,
+    FoodMilk,
+    FoodCoffee,
+    FoodTea,
 }
