@@ -7,12 +7,12 @@
         false,
         false
     ],
-    "idSave": 99,
-    "gameLevel": 10,
-    "maxLevel": 10,
-    "coins": 400,
-    "stars": 27,
-    "score": 580,
+    "idSave": 366,
+    "gameLevel": 20,
+    "maxLevel": 20,
+    "coins": 5000,
+    "stars": 57,
+    "score": 3940,
     "selectedThemeId": -1,
     "buyButtonId": 3,
     "collectionProgress": [
@@ -22,15 +22,23 @@
         },
         {
             "id": "2_Girl",
-            "count": 2
+            "count": 4
         },
         {
             "id": "8_Gum",
-            "count": 3
+            "count": 4
         },
         {
             "id": "6_Cola",
-            "count": 1
+            "count": 4
+        },
+        {
+            "id": "1_Man",
+            "count": 4
+        },
+        {
+            "id": "11_Apple",
+            "count": 4
         }
     ]
 }
