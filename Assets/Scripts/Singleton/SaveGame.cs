@@ -26,6 +26,8 @@ public class SaveGame : MonoBehaviour
     public int MaxLevel => YG2.saves.maxLevel;
     public int GameLevel => YG2.saves.gameLevel;
     public int Score => YG2.saves.score;
+    public int BonusDestroy => YG2.saves.bonusDestroy;
+    public int BonusChange => YG2.saves.bonusChange;
     
     public int SelectedThemeId
     {
@@ -174,6 +176,21 @@ public class SaveGame : MonoBehaviour
             YG2.saves.gameLevel++;
         }
         YG2.SaveProgress();
+    }
+    
+    // секция бустеров
+    public int AddBonusDestroy(int addBonus)
+    {
+        YG2.saves.bonusDestroy += addBonus;
+        YG2.SaveProgress();
+        return YG2.saves.bonusDestroy;
+    }
+    
+    public int AddBonusChange(int addBonus)
+    {
+        YG2.saves.bonusChange += addBonus;
+        YG2.SaveProgress();
+        return YG2.saves.bonusChange;
     }
 
 }

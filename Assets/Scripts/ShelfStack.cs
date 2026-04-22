@@ -146,4 +146,66 @@ public class ShelfStack : MonoBehaviour
             ghostObjects[i] = null;
         }
     }
+    
+    // удаление по ItemType предмета из будущих слоёв
+    public void RemoveTypeFromFutureLayers(ItemType type)
+    {
+        int startLayer = Mathf.Max(currentIndex + 1, 0);
+
+        for (int i = startLayer; i < layers.Count; i++)
+        {
+            if (layers[i] == null || layers[i].prefabs == null) continue;
+
+            for (int j = 0; j < layers[i].prefabs.Length; j++)
+            {
+                GameObject prefab = layers[i].prefabs[j];
+                if (prefab == null) continue;
+
+                DraggableItem prefabItem = prefab.GetComponent<DraggableItem>();
+                if (prefabItem != null && prefabItem.Type == type)
+                {
+                    layers[i].prefabs[j] = null;
+                }
+            }
+        }
+    }
+    
+    public void RefreshPreviewOnly()
+    {
+        ClearGhosts();
+
+        int next = currentIndex + 1;
+        if (next < layers.Count)
+            ShowGhostLayer(layers[next]);
+    }
+    
+    public void ReplaceTypesInFutureLayers(List<ItemType> typesToReplace, GameObject targetPrefab)
+    {
+        if (typesToReplace == null || typesToReplace.Count == 0 || targetPrefab == null)
+            return;
+
+        int startLayer = Mathf.Max(currentIndex + 1, 0);
+
+        for (int i = startLayer; i < layers.Count; i++)
+        {
+            if (layers[i] == null || layers[i].prefabs == null)
+                continue;
+
+            for (int j = 0; j < layers[i].prefabs.Length; j++)
+            {
+                GameObject prefab = layers[i].prefabs[j];
+                if (prefab == null)
+                    continue;
+
+                DraggableItem prefabItem = prefab.GetComponent<DraggableItem>();
+                if (prefabItem == null)
+                    continue;
+
+                if (typesToReplace.Contains(prefabItem.Type))
+                {
+                    layers[i].prefabs[j] = targetPrefab;
+                }
+            }
+        }
+    }
 }

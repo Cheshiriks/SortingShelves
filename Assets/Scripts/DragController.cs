@@ -11,10 +11,12 @@ public class DragController : MonoBehaviour
     private Vector3 grabOffset;
     private int originalSortingOrder;
     private SpriteRenderer draggedSR;
+    private HintPulseManager _hintPulseManager;
 
     private void Awake()
     {
         cam = Camera.main;
+        _hintPulseManager = FindFirstObjectByType<HintPulseManager>();
     }
 
     private void Update()
@@ -39,6 +41,16 @@ public class DragController : MonoBehaviour
         if (!candidate) return;
         if (candidate.CurrentSlot == null) return;
 
+        if (IsItemLocked(candidate))
+            return;
+        
+        // Если активен режим пульсации — используем бустер вместо перетаскивания
+        if (_hintPulseManager != null && _hintPulseManager.IsActive)
+        {
+            _hintPulseManager.UseOnItem(candidate);
+            return;
+        }
+
         // проверяем, что полка не заблокирована
         var shelfLock = candidate.CurrentSlot.shelf.GetComponent<ShelfLock>();
         if (shelfLock != null && shelfLock.IsLocked)
@@ -55,6 +67,14 @@ public class DragController : MonoBehaviour
 
         Vector3 mouseWorld = GetMouseWorld();
         grabOffset = dragged.transform.position - mouseWorld;
+    }
+    
+    private bool IsItemLocked(DraggableItem item)
+    {
+        if (item == null || item.CurrentSlot == null) return false;
+
+        var shelfLock = item.CurrentSlot.shelf.GetComponent<ShelfLock>();
+        return shelfLock != null && shelfLock.IsLocked;
     }
 
     private void Drag()
