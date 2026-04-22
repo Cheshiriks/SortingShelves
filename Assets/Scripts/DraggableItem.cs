@@ -17,6 +17,13 @@ public class DraggableItem : MonoBehaviour
 
     private Coroutine moveRoutine;
     
+    [Header("Pulse Hint")]
+    [SerializeField] private float pulseScaleMultiplier = 1.1f;
+    [SerializeField] private float pulseDuration = 0.45f;
+
+    private Coroutine pulseRoutine;
+    private bool isPulsing;
+    
     [Header("Audio")]
     [SerializeField] private AudioClip pickupClip;
     [SerializeField] private AudioClip dropClip;
@@ -156,5 +163,60 @@ public class DraggableItem : MonoBehaviour
     {
         foreach (var c in GetComponentsInChildren<Collider2D>(true))
             c.enabled = enabled;
+    }
+    
+    // Блок с пульсацией
+    public void StartPulse()
+    {
+        if (isPulsing) return;
+
+        isPulsing = true;
+        if (pulseRoutine != null) StopCoroutine(pulseRoutine);
+        pulseRoutine = StartCoroutine(PulseRoutine());
+    }
+
+    public void StopPulse()
+    {
+        isPulsing = false;
+
+        if (pulseRoutine != null)
+            StopCoroutine(pulseRoutine);
+
+        pulseRoutine = null;
+        transform.localScale = Vector3.one;
+    }
+
+    private IEnumerator PulseRoutine()
+    {
+        Vector3 baseScale = Vector3.one;
+        Vector3 targetScale = baseScale * pulseScaleMultiplier;
+
+        while (isPulsing)
+        {
+            float t = 0f;
+            while (t < pulseDuration)
+            {
+                t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / pulseDuration);
+                float eased = 1f - Mathf.Pow(1f - k, 3f);
+
+                transform.localScale = Vector3.Lerp(baseScale, targetScale, eased);
+                yield return null;
+            }
+
+            t = 0f;
+            while (t < pulseDuration)
+            {
+                t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / pulseDuration);
+                float eased = 1f - Mathf.Pow(1f - k, 3f);
+
+                transform.localScale = Vector3.Lerp(targetScale, baseScale, eased);
+                yield return null;
+            }
+        }
+
+        transform.localScale = baseScale;
+        pulseRoutine = null;
     }
 }

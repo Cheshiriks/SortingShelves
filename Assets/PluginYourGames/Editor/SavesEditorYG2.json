@@ -7,14 +7,16 @@
         false,
         false
     ],
-    "idSave": 366,
-    "gameLevel": 20,
-    "maxLevel": 20,
-    "coins": 5000,
-    "stars": 57,
-    "score": 3940,
+    "idSave": 850,
+    "gameLevel": 42,
+    "maxLevel": 42,
+    "coins": 2900,
+    "stars": 123,
+    "score": 9240,
+    "bonusDestroy": 2,
+    "bonusChange": 1,
     "selectedThemeId": -1,
-    "buyButtonId": 3,
+    "buyButtonId": 4,
     "collectionProgress": [
         {
             "id": "7_Soda",

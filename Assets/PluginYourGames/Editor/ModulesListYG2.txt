@@ -1,8 +1,8 @@
-Authorization v1.022
+Authorization v1.023
 EnvirData v1.0031
-InterstitialAdv v1.01
+InterstitialAdv v1.02
 Leaderboards v1.01
-Payments v1.01
+Payments v1.02
 Review v1.0
 RewardedAdv v1.011
 Storage v1.021

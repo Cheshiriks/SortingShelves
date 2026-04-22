@@ -10,6 +10,9 @@ namespace YG
         public int stars = 0;
         public int score = 0;
         
+        public int bonusDestroy = 3;
+        public int bonusChange = 3;
+        
         public int selectedThemeId = -1;
         public int buyButtonId = 0;
         
